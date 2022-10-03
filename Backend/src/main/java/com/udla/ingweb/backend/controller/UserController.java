@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/Users")
@@ -32,6 +33,18 @@ public class UserController {
         try {
             List<User> users = userRepo.findAll();
             return new ResponseEntity<List<User>>(users, HttpStatus.FOUND);
+        }catch (Exception e){
+            return new ResponseEntity<String>(e.getCause().toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id,@RequestBody User user){
+        try {
+            Optional<User> usersave = userRepo.findById(id);
+            user.setId(usersave.get().getId());
+
+            return new ResponseEntity<User>(userRepo.save(user), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<String>(e.getCause().toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
