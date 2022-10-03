@@ -50,4 +50,15 @@ public class UserController {
         }
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id){
+        try {
+            userRepo.deleteById(id);
+            return new ResponseEntity<String>("User has been deleted", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<String>(e.getCause().toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }
