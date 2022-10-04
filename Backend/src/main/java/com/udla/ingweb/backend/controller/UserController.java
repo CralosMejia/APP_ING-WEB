@@ -17,6 +17,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepo;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user){
         try {
@@ -28,16 +29,18 @@ public class UserController {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public ResponseEntity<?> getUsers(){
         try {
             List<User> users = userRepo.findAll();
-            return new ResponseEntity<List<User>>(users, HttpStatus.FOUND);
+            return new ResponseEntity<List<User>>(users, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<String>(e.getCause().toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") String id,@RequestBody User user){
         try {
@@ -50,6 +53,7 @@ public class UserController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") String id){
         try {
