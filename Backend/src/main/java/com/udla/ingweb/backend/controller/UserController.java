@@ -53,8 +53,8 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping(value = "/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> updateUser(@PathVariable("id") String id){
         try {
             userRepo.deleteById(id);

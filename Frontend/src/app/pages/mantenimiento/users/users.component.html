@@ -1,0 +1,78 @@
+<div class="row m-3">
+    <!-- --------------------Start Table------------------- -->
+    <div class="col table-responsive">
+        <table class="table caption-top">
+            <caption>List of users</caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th >Name</th>
+                    <th >Email</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr *ngFor="let user of usersList" >
+                    <td></td>
+                    <td>
+                        {{user.name}}
+                    </td>
+                    <td>
+                        {{user.email}}
+                    </td>
+                    <td class="text-center">
+                        <a (click)="updateFormUser(user)">
+                            <i class="fa-solid fa-pen-to-square cursor-icons me-2"></i>
+                        </a> 
+                        <a (click)="deleteUser(user.id)">
+                            <i class="fa-solid fa-trash cursor-icons"></i>
+                        </a>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- --------------------End Table------------------- -->
+    <!-- --------------------Start Form Create------------------- -->
+    <div class="col" *ngIf="!isUpdate">
+        <form class="form-horizontal form-material" 
+        id="loginform" 
+        (ngSubmit)="createUser()"
+        [formGroup]="userForm"
+        autocomplete="off">
+            <h5>Create User</h5>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Name</label>
+            <input type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="name"/>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" formControlName="email">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+    <!-- --------------------End Form Create------------------- -->
+    <!-- --------------------Start Form Update------------------- -->
+    <div class="col" *ngIf="isUpdate">
+        <form class="form-horizontal form-material" 
+        id="loginform" 
+        (ngSubmit)="updateUser()"
+        [formGroup]="userForm"
+        autocomplete="off">
+            <h5>Update User</h5>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Name</label>
+            <input type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="name"/>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" formControlName="email">
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+    <!-- --------------------End Form Update------------------- -->
+
+</div>
