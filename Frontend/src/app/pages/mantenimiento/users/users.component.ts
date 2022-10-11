@@ -14,7 +14,6 @@ export class UsersComponent implements OnInit {
 
   usersList: User[]=[];
   public userForm: FormGroup;
-  public isUpdate=false;
   private auxId:string;
 
   constructor(private userSrv: UserService,
@@ -74,7 +73,6 @@ export class UsersComponent implements OnInit {
   }
 
   updateFormUser(user: User){
-    this.isUpdate=true;
     this.auxId = user.id;
     this.userForm.setValue({
       name:user.name,
@@ -91,7 +89,6 @@ export class UsersComponent implements OnInit {
     user.id = this.auxId;
     this.userSrv.updateUser(user).subscribe(() => {
       this.loadUsers(); 
-      this.isUpdate=false;
       Swal.fire('User Udated');
 
     });

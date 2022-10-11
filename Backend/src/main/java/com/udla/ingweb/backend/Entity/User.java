@@ -1,4 +1,4 @@
-package com.udla.ingweb.backend.documents;
+package com.udla.ingweb.backend.Entity;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,5 +16,6 @@ public class User {
     private String id;
     private String name;
     private String email;
+    private String password;
 
 }

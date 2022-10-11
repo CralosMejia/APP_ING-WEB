@@ -34,28 +34,9 @@
         </table>
     </div>
     <!-- --------------------End Table------------------- -->
-    <!-- --------------------Start Form Create------------------- -->
-    <div class="col" *ngIf="!isUpdate">
-        <form class="form-horizontal form-material" 
-        id="loginform" 
-        (ngSubmit)="createUser()"
-        [formGroup]="userForm"
-        autocomplete="off">
-            <h5>Create User</h5>
-        <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Name</label>
-            <input type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="name"/>
-        </div>
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" formControlName="email">
-        </div>
-        <button type="submit" class="btn btn-primary">Create</button>
-        </form>
-    </div>
-    <!-- --------------------End Form Create------------------- -->
+
     <!-- --------------------Start Form Update------------------- -->
-    <div class="col" *ngIf="isUpdate">
+    <div class="col" >
         <form class="form-horizontal form-material" 
         id="loginform" 
         (ngSubmit)="updateUser()"
