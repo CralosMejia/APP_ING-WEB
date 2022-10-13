@@ -6,6 +6,8 @@ import { UsersComponent } from './mantenimiento/users/users.component';
 import { PagesComponent } from './pages.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './auth/login/login.component';
+import { RouterModule } from '@angular/router';
+import { RegisterComponent } from './auth/register/register/register.component';
 
 
 
@@ -13,12 +15,14 @@ import { LoginComponent } from './auth/login/login.component';
   declarations: [
     UsersComponent,
     PagesComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule
     
   ],
   exports:[

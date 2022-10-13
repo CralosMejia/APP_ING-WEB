@@ -16,13 +16,14 @@ public class LoginView {
     @Autowired
     private AuthController login;
 
-    @GetMapping
-    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping
     public ResponseEntity<?> loginUsers(@RequestBody LoginUser userLogin){
 
         Map<String, Object> resp = login.loginUser(userLogin.getEmail(), userLogin.getPassword());
         if(resp.containsValue("OK")){
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
+        } else if (resp.containsValue("FAIL")) {
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
 

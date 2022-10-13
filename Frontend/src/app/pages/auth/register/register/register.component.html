@@ -1,0 +1,31 @@
+<div class="row mt-5">
+    <div class="col">
+        <div class="col-4 mx-auto mt-5">
+            <form class="form-horizontal form-material" id="loginform" (ngSubmit)="createUser()"
+                [formGroup]="registerForm" autocomplete="off">
+                <h5>Register</h5>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Name</label>
+                    <input type="text" class="form-control"  rows="3"
+                        formControlName="name" placeholder="Name" />
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Email address</label>
+                    <input type="email" class="form-control"  rows="3"
+                        formControlName="email" placeholder="name@example.com" />
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Password</label>
+                    <input type="password" class="form-control"  placeholder="password"
+                        formControlName="password">
+                    <input type="password" class="form-control mt-1"  placeholder="repeat password"
+                        formControlName="passwordRepeat">
+                </div>
+                <div class="mb-2">
+                    <a routerLink="/login">login</a>
+                </div>
+                <button type="submit" class="btn btn-primary">register</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -9,13 +11,14 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class LoginComponent implements OnInit {
   
-  public userForm: FormGroup;
+  public loginForm: FormGroup;
 
   constructor(
     private userSrv: UserService,
-    private fb:FormBuilder
+    private fb:FormBuilder,
+    private router:Router
   ) { 
-    this.userForm= this.fb.group({
+    this.loginForm= this.fb.group({
       email:['',[Validators.required, Validators.email]],
       password:['',[Validators.required]]
     });
@@ -24,6 +27,21 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  login(){}
+  login(){
+    if(!this.loginForm.invalid){
+      this.userSrv.login(this.loginForm.value).subscribe((resp)=> {
+        this.router.navigateByUrl('/');
+      },error =>{
+        if(error.status === 409){
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!'
+          })
+        }
+      })
+    }
+    
+  }
 
 }

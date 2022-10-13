@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { User } from 'src/app/models/User.model';
 import { UserService } from 'src/app/services/user.service';
 
@@ -17,7 +18,8 @@ export class UsersComponent implements OnInit {
   private auxId:string;
 
   constructor(private userSrv: UserService,
-              private fb:FormBuilder
+              private fb:FormBuilder,
+              private router:Router
     ) { }
 
   ngOnInit(): void {
@@ -31,23 +33,9 @@ export class UsersComponent implements OnInit {
   }
 
   loadUsers(){
-    this.userSrv.getUsers().subscribe((users:User[])=> {
+    this.userSrv.getUsers().subscribe((users:any)=> {
       this.usersList =[];
-      users.forEach((user:User) => this.usersList.push(user));
-    });
-  }
-
-  createUser(){
-    if(this.userForm.invalid){
-      return;
-    }
-
-    this.userSrv.createUser(this.userForm.value).subscribe(() => {
-      this.loadUsers(); 
-
-      Swal.fire('User Created');
-      this.cleanForm();
-
+      this.usersList = users.Users;
     });
   }
 
@@ -67,7 +55,16 @@ export class UsersComponent implements OnInit {
           'Your file has been deleted.',
           'success'
         )
-        this.userSrv.deleteUser(id).subscribe(()=>this.loadUsers());
+        this.userSrv.deleteUser(id).subscribe((res)=>{this.loadUsers()},error=>{
+          if(error.status === 500){
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: "You can't delete yourself"
+            })
+            console.clear();
+          }
+      });
       }
     })
   }
@@ -101,6 +98,11 @@ export class UsersComponent implements OnInit {
       name:"",
       email:""
     }); 
+  }
+
+  logout(){
+    this.userSrv.logout();
+    this.router.navigateByUrl('/login');
   }
 
 }

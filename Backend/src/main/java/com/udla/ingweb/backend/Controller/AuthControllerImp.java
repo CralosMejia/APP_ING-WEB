@@ -37,7 +37,8 @@ public class AuthControllerImp implements AuthController {
         boolean checkCredentials = argon.verify(usersave.get().getPassword(), password);
 
         if(checkCredentials){
-            String tokenJWT =jwt.create(usersave.get().getId(),usersave.get().getEmail());;
+            String tokenJWT =jwt.create(usersave.get().getId(),usersave.get().getEmail());
+            usersave.get().setPassword("");
             respJson.put("Status","OK");
             respJson.put("User",usersave.get());
             respJson.put("token",tokenJWT);

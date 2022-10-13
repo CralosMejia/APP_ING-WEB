@@ -21,30 +21,29 @@ public class UserView {
     @Autowired
     private UserController userController;
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user){
-        User usersave = userController.createUser(user);
-        if(usersave != null) {
-            return new ResponseEntity<User>(usersave, HttpStatus.CREATED);
+        Map<String, Object> resp = userController.createUser(user);
+        if(resp.containsValue("OK")) {
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
         }else{
             return new ResponseEntity<String>("Error to create User", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     public ResponseEntity<?> getUsers(@RequestHeader(value = "token") String token){
         Map<String, Object> resp = userController.getUsers(token);
         if(resp.containsValue("OK")) {
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
-        }else {
+        } else if (resp.containsValue("You can't delete yourself")) {
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
+        } else {
             return new ResponseEntity<String>("Error to get users", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") String id,@RequestBody User user,@RequestHeader(value = "token") String token){
         Map<String, Object> resp= userController.updateUser(id,user,token);
@@ -56,7 +55,6 @@ public class UserView {
     }
 
     @DeleteMapping(value = "/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> updateUser(@PathVariable("id") String id,@RequestHeader(value = "token") String token){
         Map<String, Object> resp = userController.deleteUser(id,token);
         if(resp.containsValue("OK") ){
