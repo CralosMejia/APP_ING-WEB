@@ -1,4 +1,4 @@
-package com.udla.ingweb.backend.Utils;
+package com.udla.ingweb.backend.Security.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;

@@ -2,7 +2,8 @@ package com.udla.ingweb.backend.Controller;
 
 import com.udla.ingweb.backend.Entity.User;
 import com.udla.ingweb.backend.Model.UserRepository;
-import com.udla.ingweb.backend.Utils.JWTUtil;
+import com.udla.ingweb.backend.Security.Utils.JWTUtil;
+import com.udla.ingweb.backend.Security.config.JwtIO;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,33 +19,23 @@ public class AuthControllerImp implements AuthController {
 
     @Autowired
     private UserRepository userRepo;
-
     @Autowired
-    private JWTUtil jwt;
+    private JwtIO jwtio;
 
-    private List<User> getUsers() {
-        return userRepo.findAll();
-    }
+
 
     @Override
-    public Map<String, Object> loginUser(String email, String password) {
-        List<User> users = getUsers();
+    public Map<String, Object> generateToken(String email){
         Map<String, Object> respJson = new HashMap<String,Object>();
-        Argon2 argon = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
 
+        List<User> users = userRepo.findAll();
+        Optional<User> user = users.stream().filter(userP -> email.equals(userP.getEmail())).findFirst();
 
-        Optional<User> usersave = users.stream().filter(user -> email.equals(user.getEmail())).findFirst();
-        boolean checkCredentials = argon.verify(usersave.get().getPassword(), password);
+        String jwt = jwtio.generateToken(user.get().getId());
 
-        if(checkCredentials){
-            String tokenJWT =jwt.create(usersave.get().getId(),usersave.get().getEmail());
-            usersave.get().setPassword("");
-            respJson.put("Status","OK");
-            respJson.put("User",usersave.get());
-            respJson.put("token",tokenJWT);
-            return respJson;
-        }
-        respJson.put("Status","FAIL");
-        return respJson;
+        respJson.put("token",jwt);
+        respJson.put("User",user.get());
+        return  respJson;
+
     }
 }

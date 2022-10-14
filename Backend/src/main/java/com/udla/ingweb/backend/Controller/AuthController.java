@@ -4,5 +4,6 @@ import java.util.Map;
 
 public interface AuthController {
 
-    public Map<String, Object> loginUser(String email, String password);
+
+    public Map<String, Object> generateToken(String userID);
 }
