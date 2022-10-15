@@ -20,13 +20,10 @@ public class UserValidator {
     private UserRepository userRepo;
     @Autowired
     private JwtIO jwtio;
-    private static final String CLIENT_CREDENTIALS ="client_credential";
 
-    public void validate(User user,String grantType) throws errorMessage {
 
-        if(!grantType.equals(CLIENT_CREDENTIALS)){
-            message("Field grantType is invalid");
-        }
+    public void validate(User user) throws errorMessage {
+
         if(Objects.isNull(user)){
             message("User invalid");
         }
@@ -40,22 +37,13 @@ public class UserValidator {
         }
     }
 
-    public void validatePUT(User user,String grantType) throws errorMessage {
+    public void validatePUT(User user) throws errorMessage {
 
-        if(!grantType.equals(CLIENT_CREDENTIALS)){
-            message("Field grantType is invalid");
-        }
         if(Objects.isNull(user)){
             message("User invalid");
         }
     }
 
-    public void validateDelete(String grantType) throws errorMessage {
-
-        if(!grantType.equals(CLIENT_CREDENTIALS)){
-            message("Field grantType is invalid");
-        }
-    }
 
 
     public void validateUserID(String userID) throws errorMessage {

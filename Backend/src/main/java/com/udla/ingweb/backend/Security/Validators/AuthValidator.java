@@ -8,30 +8,25 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 @Component
 public class AuthValidator {
 
-    private static final String CLIENT_CREDENTIALS ="client_credential";
-
     @Autowired
     private UserRepository userRepo;
 
-    public void validate(MultiValueMap<String,String> paramMap, String grantType) throws errorMessage {
+    public void validate(Map<String,String> paramMap) throws errorMessage {
 
-        if(!grantType.equals(CLIENT_CREDENTIALS)){
-            message("Field grantType is invalid");
-        }
 
         if(Objects.isNull(paramMap) ){
             message("Params invalid");
         }
-        if(!validatecredencials(paramMap.getFirst("password"),paramMap.getFirst("email"))){
+        if(!validatecredencials(paramMap.get("password"),paramMap.get("email"))){
             message("Credentials are invalid");
         }
     }

@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 import java.util.List;
 
 @Component
@@ -21,6 +22,7 @@ public class InterceptorJwtIO implements HandlerInterceptor {
 
     public static String token;
 
+    private String nameToken;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         boolean validate=false;
@@ -31,9 +33,18 @@ public class InterceptorJwtIO implements HandlerInterceptor {
             validate = true;
         }
 
-        if(!validate && request.getHeader("Authorization") != null && !request.getHeader("Authorization").isEmpty()){
-            token = request.getHeader("Authorization").replace("Bearer","");
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = (String) headerNames.nextElement();
+            String value = request.getHeader(key);
+            if(key.equals("token")){
+                nameToken = value;
+            }
+        }
 
+
+        if(!validate && !nameToken.isEmpty()){
+            token = nameToken;
             validate = !jwtIO.validateToken(token);
         }
 

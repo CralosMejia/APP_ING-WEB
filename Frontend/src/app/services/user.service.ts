@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { User } from '../models/User.model';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { LoginForm } from '../Interfaces/login-interface';
+import { of } from 'rxjs';
 
 const base_url = environment.base_url;
 
@@ -26,21 +27,27 @@ export class UserService {
     
   }
 
-  getUsers(){
-
-    const url = `${base_url}/Users`;
-    return this.http.get(url,{
-      headers: this.headers
-   });
-  }
 
   saveLocalStorage(token:string){
     localStorage.setItem('token',token);
   }
 
+  getUsers(){
+    const url = `${base_url}/Users/entry`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      })
+    })
+  }
+
+
+
   createUser(formData: any){
     const user: User =formData;
-    return this.http.post(`${base_url}/Users`,user).pipe(
+    return this.http.post(`${base_url}/Users/create`,user).pipe(
       tap((resp: any) => {
         this.saveLocalStorage(resp.token);
       })
@@ -48,18 +55,18 @@ export class UserService {
   }
 
   deleteUser(id:String){
-    const url = `${base_url}/Users/${id}`;
+    const url = `${base_url}/Users/delete/${id}`;
     return this.http.delete(url,{
-      headers: this.headers,
-      responseType: 'text' 
+      headers: this.headers 
    });
   }
 
   updateUser(user:User){
-    const url = `${base_url}/Users/${user.id}`;
+    const url = `${base_url}/Users/update/${user.id}`;
     return this.http.put(url,user,{
-      headers: this.headers,
-      responseType: 'text' 
+      headers: {
+        'token':this.token
+      }
     });
   }
 
@@ -68,19 +75,40 @@ export class UserService {
     const url = `${base_url}/login`;
 
     return this.http.post(url,user,{
-      headers: this.headers,
-      responseType: 'text' 
+      headers: new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      }),
+      responseType: 'text'
+
     }).pipe(
       tap((resp: any) => {
         this.saveLocalStorage(JSON.parse(resp).token);
       }),
-      map((resp:any) =>{
-          return JSON.parse(resp);
-      })
+       map((resp:any) =>{
+           return JSON.parse(resp);
+       })
     );
   }
 
   logout(){
     localStorage.removeItem('token');
+  }
+
+  validateToken(){
+    const url = `${base_url}/login/validate`;
+    return this.http.get(url,{
+      headers:this.headers
+    }).pipe(
+      map((resp: any )=>{
+        console.log(resp);
+        return resp.Validation;
+      }),
+      catchError(error => {
+        console.log(error)
+        return of(false)
+      } )
+    )
   }
 }
