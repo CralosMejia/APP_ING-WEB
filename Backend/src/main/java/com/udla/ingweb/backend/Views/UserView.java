@@ -48,6 +48,7 @@ public class UserView {
     public ResponseEntity<?> getUsers(@RequestBody MultiValueMap<String,String> paramMap,
                                       @RequestParam("grant_type") String grantType){
         try{
+            userValidator.validateUserID(paramMap.getFirst("userID"));
             generalValidator.validate(paramMap, grantType);
             Map<String, Object> respJson = userController.getUsers(InterceptorJwtIO.token);
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
@@ -56,29 +57,38 @@ public class UserView {
         }
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/update/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id,@RequestBody User user,@RequestHeader(value = "token") String token){
-        Map<String, Object> resp= userController.updateUser(id,user,token);
-        if(resp.containsValue("OK")) {
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<String>("Error to update User", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> updateUser(@RequestBody User user,
+                                        @RequestParam("grant_type") String grantType,
+                                        @PathVariable("id") String id)
+    {
+        try{
+            userValidator.validatePUT(user,grantType);
+            userValidator.validateUserID(id);
+            Map<String, Object> respJson = userController.updateUser(id,user);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (errorMessage e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
         }
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id,@RequestHeader(value = "token") String token){
-        Map<String, Object> resp = userController.deleteUser(id,token);
-        if(resp.containsValue("OK") ){
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<String>("Error to delete user", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id,
+                                        @RequestParam("grant_type") String grantType){
+        try{
+            userValidator.validateDelete(grantType);
+            userValidator.validateUserID(id);
+            userValidator.validateDeleteUser(id);
+            Map<String, Object> respJson = userController.deleteUser(id);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (errorMessage e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
         }
 
     }
-    
+
 
 
 

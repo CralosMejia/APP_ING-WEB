@@ -2,7 +2,6 @@ package com.udla.ingweb.backend.Controller;
 
 import com.udla.ingweb.backend.Entity.User;
 import com.udla.ingweb.backend.Model.UserRepository;
-import com.udla.ingweb.backend.Security.Utils.JWTUtil;
 import com.udla.ingweb.backend.Security.config.JwtIO;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
@@ -17,8 +16,6 @@ public class UserControllerImp implements UserController {
     @Autowired
     private UserRepository userRepo;
 
-    @Autowired
-    private JWTUtil jwt;
     @Autowired
     private JwtIO jwtio;
 
@@ -48,6 +45,7 @@ public class UserControllerImp implements UserController {
         findUser.get().setPassword("");
         if(!findUser.isEmpty()) {
             users.forEach(user -> user.setPassword(""));
+
             respJson.put("User Owner",findUser);
             respJson.put("Status","OK");
             respJson.put("Users",users);
@@ -60,53 +58,33 @@ public class UserControllerImp implements UserController {
 
     //hay que mejorar
     @Override
-    public Map<String, Object>  updateUser(String id, User user,String token){
+    public Map<String, Object>  updateUser(String id, User user){
         Map<String, Object> respJson = new HashMap<String,Object>();
-        try {
+        Optional<User> usersave = userRepo.findById(id);
 
-            String userID = jwt.getKey(token);
-
-            if(userID.equals(id)){
-                Optional<User> usersave = userRepo.findById(id);
-                user.setId(usersave.get().getId());
-                user.setPassword(usersave.get().getPassword());
-                userRepo.save(user);
-
-                respJson.put("Status","OK");
-                respJson.put("User",user);
-                return respJson;
-            }
-
-            respJson.put("Status","FAIL");
-            return respJson;
-        }catch (Exception e){
-            System.out.println("Update User: "+e);
-            respJson.put("Status","FAIL");
-            return respJson;
+        if(!Objects.isNull(user.getName())){
+            usersave.get().setName(user.getName());
         }
+        if(!Objects.isNull(user.getPassword())){
+            usersave.get().setPassword(user.getPassword());
+        }
+
+        userRepo.save(usersave.get());
+
+        respJson.put("Status","OK");
+        respJson.put("User",usersave);
+
+        return respJson;
     }
 
     @Override
-    public Map<String, Object> deleteUser(String id, String token) {
+    public Map<String, Object> deleteUser(String id) {
         Map<String, Object> respJson = new HashMap<String,Object>();
-        try {
 
-            String userID = jwt.getKey(token);
-
-            if(!userID.equals(id)){
-                userRepo.deleteById(id);
-                respJson.put("Status","OK");
-                respJson.put("MSG","User has been deleted");
-                return respJson;
-            }
-            respJson.put("Status","FAIL");
-            respJson.put("MSG","You can't delete yourself");
-            return respJson;
-        }catch (Exception e){
-            System.out.println("Delete User: "+e);
-            respJson.put("Status","FAIL");
-            return respJson;
-        }
+        userRepo.deleteById(id);
+        respJson.put("Status","OK");
+        respJson.put("MSG","User has been deleted");
+        return respJson;
     }
 
 
