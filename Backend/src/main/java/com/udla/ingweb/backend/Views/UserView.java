@@ -63,7 +63,7 @@ public class UserView {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id,
+    public ResponseEntity<?> deleteUser(@PathVariable("id") String id,
                                         @RequestBody String LoginUserID){
         try{
             userValidator.validateID(LoginUserID);

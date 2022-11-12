@@ -2,7 +2,6 @@ package com.udla.ingweb.backend.Controller;
 
 import com.udla.ingweb.backend.Entity.Product;
 import com.udla.ingweb.backend.Model.ProductRepository;
-import com.udla.ingweb.backend.Security.config.JwtIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -15,8 +14,6 @@ public class ProductControllerImp implements ProductController {
     @Autowired
     private ProductRepository productRepo;
 
-    @Autowired
-    private JwtIO jwtio;
 
     @Override
     public Map<String, Object> createProduct(Product product) {

@@ -62,7 +62,7 @@ public class ProductView {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable("id") String id,
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") String id,
                                         @RequestBody String LoginUserID){
         try{
             userValidator.validateID(LoginUserID);
