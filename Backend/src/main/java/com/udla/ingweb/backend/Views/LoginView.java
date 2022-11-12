@@ -26,7 +26,7 @@ public class LoginView {
     public ResponseEntity<?> login(@RequestBody  Map<String, String > paramMap) {
         try{
             authValidator.validate(paramMap);
-            Map<String, Object> respJson = authController.generateToken(paramMap.get("email"));
+            Map<String, Object> respJson = authController.generateTokenAndMenu(paramMap.get("email"));
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);

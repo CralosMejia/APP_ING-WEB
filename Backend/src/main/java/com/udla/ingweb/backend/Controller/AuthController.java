@@ -5,5 +5,5 @@ import java.util.Map;
 public interface AuthController {
 
 
-    public Map<String, Object> generateToken(String userID);
+    public Map<String, Object> generateTokenAndMenu(String userID);
 }

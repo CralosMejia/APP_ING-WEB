@@ -7,11 +7,11 @@ import com.udla.ingweb.backend.Security.config.InterceptorJwtIO;
 import com.udla.ingweb.backend.Security.config.JwtIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class UserValidator {
@@ -37,7 +37,7 @@ public class UserValidator {
         }
     }
 
-    public void validatePUT(User user) throws errorMessage {
+    public void validatePUT(Object user) throws errorMessage {
 
         if(Objects.isNull(user)){
             message("User invalid");
@@ -46,7 +46,7 @@ public class UserValidator {
 
 
 
-    public void validateUserID(String userID) throws errorMessage {
+    public void validateID(String userID) throws errorMessage {
         List<User> users = new ArrayList<User>(userRepo.findAll());
         if(!users.stream().anyMatch(user -> userID.equals(user.getId()))){
             message("User doesn't exists");
@@ -58,6 +58,14 @@ public class UserValidator {
         if(id.equals(tokenID)){
             message("Can't delete yourself.");
         }
+    }
+
+    public void rolValidate(String UserID) throws errorMessage {
+        Optional<User> usersave = userRepo.findById(UserID);
+        if(!usersave.get().getROL().equals("ADMIN")){
+            message("You don't have permisions to do this action");
+        }
+
     }
 
     private boolean validationEmail(String email){

@@ -6,10 +6,7 @@ import com.udla.ingweb.backend.Security.config.JwtIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class AuthControllerImp implements AuthController {
@@ -22,7 +19,7 @@ public class AuthControllerImp implements AuthController {
 
 
     @Override
-    public Map<String, Object> generateToken(String email){
+    public Map<String, Object> generateTokenAndMenu(String email){
         Map<String, Object> respJson = new HashMap<String,Object>();
 
         List<User> users = userRepo.findAll();
@@ -32,7 +29,19 @@ public class AuthControllerImp implements AuthController {
 
         respJson.put("token",jwt);
         respJson.put("User",user.get());
+        respJson.put("Menu",getMenu(user.get().getROL()));
         return  respJson;
 
+    }
+
+
+    private List<String> getMenu(String rol){
+        List<String> menu = new ArrayList();
+        if(rol.equals("ADMIN")){
+            menu.add("Update Users");
+        }else if(rol.equals("USER")){
+            menu.add("GET Users");
+        }
+        return menu;
     }
 }
