@@ -54,16 +54,20 @@ export class UserService {
   );
   }
 
-  deleteUser(id:String){
+  deleteUser(id:String, userLoginID: string){
     const url = `${base_url}/Users/delete/${id}`;
     return this.http.delete(url,{
-      headers: this.headers 
+      headers: this.headers,
+      body:userLoginID
    });
   }
 
-  updateUser(user:User){
+  updateUser(user:User,userLoginID: string){
     const url = `${base_url}/Users/update/${user.id}`;
-    return this.http.put(url,user,{
+    return this.http.put(url,{
+        "user":user,
+        "id":userLoginID
+    },{
       headers: {
         'token':this.token
       }
@@ -102,13 +106,39 @@ export class UserService {
       headers:this.headers
     }).pipe(
       map((resp: any )=>{
-        console.log(resp);
         return resp.Validation;
       }),
       catchError(error => {
-        console.log(error)
         return of(false)
       } )
     )
   }
+
+  getUserRol(userLoginID: string){
+    const url = `${base_url}/Users/rol/${userLoginID}`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      }),
+      
+    })
+  }
+
+  findUser(userLoginID: string){
+    const url = `${base_url}/Users/find/${userLoginID}`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      }),
+      
+    })
+  }
+
+
 }
+
+

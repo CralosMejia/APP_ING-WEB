@@ -1,0 +1,91 @@
+<div class="row m-3" *ngIf="isAdmin">
+    <h1>Products</h1>
+    <!-- --------------------Start Table------------------- -->
+    <div class="col table-responsive">
+        <table class="table caption-top">
+            <caption>List of Products</caption>
+            <thead>
+                <tr>
+                    <th >Name</th>
+                    <th >Description</th>
+                    <th >Price</th>
+                    <th class="text-center" >Actions</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr *ngFor="let prod of productsList" >
+                    <td>
+                        {{prod.name}}
+                    </td>
+                    <td>
+                        {{prod.description}}
+                    </td>
+                    <td>
+                        {{prod.price}}
+                    </td>
+                    <td class="text-center" *ngIf="isAdmin">
+                        <a (click)="updateFormProd(prod)">
+                            <i class="fa-solid fa-pen-to-square cursor-icons me-2"></i>
+                        </a> 
+                        <a (click)="deleteProd(prod.id)">
+                            <i class="fa-solid fa-trash cursor-icons"></i>
+                        </a>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- --------------------End Table------------------- -->
+</div>
+<div class="row m-3" *ngIf="isAdmin">
+    <!-- --------------------Start Form Create------------------- -->
+    <div class="col" *ngIf="isAdmin" >
+        <form class="form-horizontal form-material" 
+        id="loginform" 
+        (ngSubmit)="createProduct()"
+        [formGroup]="productFormCreate"
+        autocomplete="off">
+            <h5>Create Product</h5>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Name</label>
+            <input type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="name"/>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Description</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" formControlName="description">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Price</label>
+            <input type="number" class="form-control" id="exampleFormControlInput1" formControlName="price">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+    <!-- --------------------End Form Create------------------- -->
+
+    <!-- --------------------Start Form Update------------------- -->
+    <div class="col" *ngIf="isAdmin" >
+        <form class="form-horizontal form-material" 
+        id="loginform" 
+        (ngSubmit)="updateProduct()"
+        [formGroup]="productFormUpdate"
+        autocomplete="off">
+            <h5>Update Product</h5>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Name</label>
+            <input type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="name"/>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Description</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" formControlName="description">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Price</label>
+            <input type="number" class="form-control" id="exampleFormControlInput1" formControlName="price">
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+    </div>
+    <!-- --------------------End Form Update------------------- -->
+</div>

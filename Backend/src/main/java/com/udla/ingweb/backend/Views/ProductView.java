@@ -34,11 +34,11 @@ public class ProductView {
         }
     }
 
-    @GetMapping(path = "/entry")
-    public ResponseEntity<?> getProducts(@RequestBody String ID){
+    @GetMapping(path = "/entry/{id}")
+    public ResponseEntity<?> getProducts(@PathVariable("id") String id){
         try{
-            userValidator.validateID(ID);
-            userValidator.rolValidate(ID);
+            userValidator.validateID(id);
+            userValidator.rolValidate(id);
             Map<String, Object> respJson = productController.getProducts();
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){

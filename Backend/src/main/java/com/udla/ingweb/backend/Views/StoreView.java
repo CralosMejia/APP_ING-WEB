@@ -32,11 +32,11 @@ public class StoreView {
         }
     }
 
-    @GetMapping(path = "/entry")
-    public ResponseEntity<?> getStores(@RequestBody String ID){
+    @GetMapping(path = "/entry/{id}")
+    public ResponseEntity<?> getStores(@PathVariable("id") String id){
         try{
-            userValidator.validateID(ID);
-            userValidator.rolValidate(ID);
+            userValidator.validateID(id);
+            userValidator.rolValidate(id);
             Map<String, Object> respJson = storeController.getStores();
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){

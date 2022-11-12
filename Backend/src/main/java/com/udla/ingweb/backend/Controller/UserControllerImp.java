@@ -87,5 +87,26 @@ public class UserControllerImp implements UserController {
         return respJson;
     }
 
+    @Override
+    public Map<String, Object> getUserRol(String id) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+
+        Optional<User> usersave = userRepo.findById(id);
+
+        respJson.put("Rol",usersave.get().getROL());
+        return respJson;
+
+    }
+
+    @Override
+    public Map<String, Object> findUser(String id) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+
+        Optional<User> usersave = userRepo.findById(id);
+
+        respJson.put("user",usersave.get());
+        return respJson;
+    }
+
 
 }

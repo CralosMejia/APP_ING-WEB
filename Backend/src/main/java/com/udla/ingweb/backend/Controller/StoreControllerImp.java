@@ -19,6 +19,7 @@ public class StoreControllerImp implements StoreController {
     @Override
     public Map<String, Object> createStore(Store store) {
         Map<String, Object> respJson = new HashMap<String,Object>();
+
         Optional<User> usersave = userRepo.findById(store.getOwner().getId());
 
         store.setOwner(usersave.get());

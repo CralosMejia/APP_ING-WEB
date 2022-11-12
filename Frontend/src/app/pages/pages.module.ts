@@ -8,6 +8,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './auth/login/login.component';
 import { RouterModule } from '@angular/router';
 import { RegisterComponent } from './auth/register/register/register.component';
+import { ProductsComponent } from './mantenimiento/products/products.component';
+import { StoresComponent } from './mantenimiento/stores/stores.component';
 
 
 
@@ -16,7 +18,9 @@ import { RegisterComponent } from './auth/register/register/register.component';
     UsersComponent,
     PagesComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ProductsComponent,
+    StoresComponent
   ],
   imports: [
     CommonModule,

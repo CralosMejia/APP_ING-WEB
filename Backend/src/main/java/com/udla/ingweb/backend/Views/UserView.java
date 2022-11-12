@@ -78,6 +78,26 @@ public class UserView {
 
     }
 
+    @GetMapping(path = "/rol/{id}")
+    public ResponseEntity<?> getUserRol(@PathVariable("id") String id){
+        try{
+            Map<String, Object> respJson = userController.getUserRol(id);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping(path = "/find/{id}")
+    public ResponseEntity<?> findUser(@PathVariable("id") String id){
+        try{
+            Map<String, Object> respJson = userController.findUser(id);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
 
 
 

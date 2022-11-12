@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { identifierName } from '@angular/compiler';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/User.model';
 import { UserService } from 'src/app/services/user.service';
 
@@ -16,13 +17,27 @@ export class UsersComponent implements OnInit {
   usersList: User[]=[];
   public userForm: FormGroup;
   private auxId:string;
+  private idUserLogin;
+  public isAdmin:boolean = false;
 
   constructor(private userSrv: UserService,
               private fb:FormBuilder,
-              private router:Router
+              private route:ActivatedRoute
     ) { }
 
   ngOnInit(): void {
+    
+    
+
+    this.route.queryParams.subscribe(params=>{
+      this.idUserLogin = params['idUser'] || "0"
+    })
+
+    this.userSrv.getUserRol(this.idUserLogin).subscribe((res:any)=>{
+      if(res.Rol === "ADMIN"){
+        this.isAdmin = true;
+      }
+    })
 
     this.userForm= this.fb.group({
       name:['', Validators.required],
@@ -34,7 +49,6 @@ export class UsersComponent implements OnInit {
 
   loadUsers(){
     this.userSrv.getUsers().subscribe((users:any)=> {
-      console.log(users);
       this.usersList =[];
       this.usersList = users.Users;
     });
@@ -56,7 +70,7 @@ export class UsersComponent implements OnInit {
           'Your file has been deleted.',
           'success'
         )
-        this.userSrv.deleteUser(id).subscribe((res)=>{this.loadUsers()},error=>{
+        this.userSrv.deleteUser(id,this.idUserLogin).subscribe((res)=>{this.loadUsers()},error=>{
           if(error.status === 500){
             Swal.fire({
               icon: 'error',
@@ -85,7 +99,7 @@ export class UsersComponent implements OnInit {
       
     let user:User = this.userForm.value;
     user.id = this.auxId;
-    this.userSrv.updateUser(user).subscribe(() => {
+    this.userSrv.updateUser(user,this.idUserLogin).subscribe(() => {
       this.loadUsers(); 
       Swal.fire('User Udated');
 
@@ -101,9 +115,5 @@ export class UsersComponent implements OnInit {
     }); 
   }
 
-  logout(){
-    this.userSrv.logout();
-    this.router.navigateByUrl('/login');
-  }
 
 }

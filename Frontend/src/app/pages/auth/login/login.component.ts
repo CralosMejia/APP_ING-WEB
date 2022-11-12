@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   login(){
     if(!this.loginForm.invalid){
       this.userSrv.login(this.loginForm.value).subscribe((resp)=> {
-        this.router.navigateByUrl('/');
+        this.router.navigate(['/'],{queryParams: {idUser: resp.User.id}});
       },error =>{
         if(error.status === 409){
           Swal.fire({
