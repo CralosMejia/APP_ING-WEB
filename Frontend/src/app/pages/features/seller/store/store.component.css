@@ -1,0 +1,25 @@
+.container-forms-details{
+    margin-top: 20px;
+}
+
+.container-forms-details form{
+    width: 35vw;
+}
+
+.container-load{
+    display: flex;
+    width: 100vw;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.create-product{
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+.col-products, .col-sales{
+    height: 65vh;
+    overflow-x: scroll;
+}

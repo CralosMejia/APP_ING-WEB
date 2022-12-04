@@ -2,7 +2,7 @@ package com.udla.ingweb.backend.Controller;
 
 import com.udla.ingweb.backend.Entity.User;
 import com.udla.ingweb.backend.Model.UserRepository;
-import com.udla.ingweb.backend.Security.config.JwtIO;
+import com.udla.ingweb.backend.Model.Security.config.JwtIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 

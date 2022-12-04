@@ -1,0 +1,21 @@
+<div class="container" *ngFor="let prod of arrayProducts">
+    <div class="card">
+        <div class="card-body col-6">
+            <h5 class="card-title">{{prod.name}}</h5>
+            <h6>{{prod.price}}$</h6>
+            <h6>units available: {{prod.amount}}</h6>
+            <p class="card-text">Description</p>
+            <form
+            (ngSubmit)="addProductShoppingCar(prod.id)" 
+                [formGroup]="amountForm"
+            >
+                <input type="number" min="1" max="{{prod.amount}}" formControlName="value" id="input-number-{{prod.id}}" value="0">
+                <button type="submit"  class="btn btn-primary">Add to shopping car</button>
+            </form>
+        </div>
+        <div class="card-body store-card-information">
+            <h5 class="card-title">Store's name</h5>
+            <p class="card-text">Address</p>
+        </div>
+    </div>
+</div>

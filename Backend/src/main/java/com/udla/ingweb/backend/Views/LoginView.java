@@ -1,8 +1,8 @@
 package com.udla.ingweb.backend.Views;
 
 import com.udla.ingweb.backend.Controller.AuthController;
-import com.udla.ingweb.backend.Security.Validators.AuthValidator;
-import com.udla.ingweb.backend.Security.config.JwtIO;
+import com.udla.ingweb.backend.Model.Security.Validators.AuthValidator;
+import com.udla.ingweb.backend.Model.Security.config.JwtIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

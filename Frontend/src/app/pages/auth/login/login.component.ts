@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   login(){
     if(!this.loginForm.invalid){
       this.userSrv.login(this.loginForm.value).subscribe((resp)=> {
-        this.router.navigate(['/'],{queryParams: {idUser: resp.User.id}});
+        this.router.navigate(['/start/customer'],{queryParams: {idUser: resp.User.id}});
       },error =>{
         if(error.status === 409){
           Swal.fire({

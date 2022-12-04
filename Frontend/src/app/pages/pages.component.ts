@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-pages',
@@ -9,17 +10,13 @@ import { UserService } from '../services/user.service';
 })
 export class PagesComponent implements OnInit {
 
-  constructor(
-              private userSrv: UserService,
-              private router:Router,
-  ) { }
+
+
+  constructor( ) { }
 
   ngOnInit(): void {
   }
 
-  logout(){
-    this.userSrv.logout();
-    this.router.navigateByUrl('/login');
-  }
+  
 
 }

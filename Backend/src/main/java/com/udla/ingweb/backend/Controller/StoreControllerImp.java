@@ -20,10 +20,13 @@ public class StoreControllerImp implements StoreController {
     public Map<String, Object> createStore(Store store) {
         Map<String, Object> respJson = new HashMap<String,Object>();
 
-        Optional<User> usersave = userRepo.findById(store.getOwner().getId());
+        User usersave = userRepo.findById(store.getOwner()).get();
 
-        store.setOwner(usersave.get());
+        if(!usersave.getROL().equals("ADMIN")){
+            usersave.setROL("SELLER");
+        }
 
+        userRepo.save(usersave);
         Store storesave = storeRepo.save(store);
 
 
@@ -38,6 +41,17 @@ public class StoreControllerImp implements StoreController {
         Map<String, Object> respJson = new HashMap<String,Object>();
 
         List<Store> stores= new ArrayList<Store>(storeRepo.findAll());
+
+        respJson.put("Stores",stores);
+
+        return respJson;
+    }
+
+    @Override
+    public Map<String, Object> getStoresForSeller(String userId) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+
+        List<Store> stores= new ArrayList<Store>(storeRepo.findAll().stream().filter(store -> (store.getOwner().equals(userId))).toList());
 
         respJson.put("Stores",stores);
 
@@ -61,6 +75,16 @@ public class StoreControllerImp implements StoreController {
         storeRepo.save(storesave.get());
 
         respJson.put("Status","OK");
+        respJson.put("Store",storesave);
+
+        return respJson;
+    }
+
+    @Override
+    public Map<String, Object> findStore(String storeId) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        Store storesave = storeRepo.findById(storeId).get();
+
         respJson.put("Store",storesave);
 
         return respJson;

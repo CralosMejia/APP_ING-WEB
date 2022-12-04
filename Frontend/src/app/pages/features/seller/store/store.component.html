@@ -1,0 +1,98 @@
+<div class="container container-forms-details">
+    <div class="row">
+        <div class="col">
+            <form>
+                <div class="mb-3">
+                    <input type="text" class="form-control" [value]="store.name" [disabled]="!isEditedStore"
+                        id="form-store-name">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" [value]="store.address" [disabled]="!isEditedStore"
+                        id="form-store-address">
+                </div>
+                <button type="submit" class="btn btn-primary" *ngIf="isEditedStore"
+                    (click)="updateStore()">edit</button>
+                <button type="button" class="btn btn-danger" *ngIf="isEditedStore"
+                    (click)="editDetails()">cancel</button>
+            </form>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-info" (click)="editDetails()">Edit Store</button>
+            <button type="button" class="btn btn-success" (click)="createProductBool()">Create Product</button>
+        </div>
+    </div>
+    <div class="row create-product " *ngIf="isCreatedProduct">
+        <h2>Create Product</h2>
+        <form
+            (ngSubmit)="createProd()" 
+            [formGroup]="createProdForm"
+        >
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" formControlName="name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Price</label>
+                <input type="number" min="0" class="form-control" formControlName="price">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Amount</label>
+                <input type="number" min="0" class="form-control" formControlName="amount">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <input type="text" class="form-control" formControlName="description">
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+            <button  class="btn btn-danger" (click)="createProductBool()">Cancel</button>
+        </form>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col col-products">
+            <h2>Products</h2>
+            <div class="card" *ngFor="let prod of arrayProducts">
+                <div class="card-body col-6">
+                    <form>
+                        <input type="text" class="form-control" [value]="prod.name" id="form-prod-name-{{prod.id}}">
+                        <input type="number" min="0.01" id="form-prod-price-{{prod.id}}" [value]="prod.price">$
+                        <br>
+                        units available:<input type="number" min="0" id="form-prod-amount-{{prod.id}}"
+                            value="{{prod.amount}}">
+                        <input type="text" class="form-control" [value]="prod.description"
+                            id="form-prod-description-{{prod.id}}">
+                        <button type="submit" class="btn btn-primary" (click)="updateProd(prod.id)">update</button>
+                        <button type="submit" class="btn btn-dark" (click)="seeSales(prod.id)">See Sales</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sales">
+            <h2>Sales</h2>
+            <div class="container" *ngFor=" let sale of productsList">
+
+                <div class="card card-principal">
+                    <div class="card-header">
+                        <h5>Date: {{sale.date | date:'short':'IST'}}</h5>
+                        <h5>Total: {{sale.total | currency:'USD':'symbol'}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Card product -->
+                        <div class="card" *ngFor="let prod of sale.products">
+                            <div class="card-body col-6">
+                                <h5 class="card-title">{{prod.name}}</h5>
+                                <h6>units: {{prod.amount}}</h6>
+                                <h6>Unit value: {{prod.price | currency:'USD':'symbol'}}</h6>
+                                <h6>Subtotal: {{prod.price * prod.amount | currency:'USD':'symbol'}}</h6>
+                                <p class="card-text">{{prod.description}}</p>
+                            </div>
+                        </div>
+                        <!--  -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

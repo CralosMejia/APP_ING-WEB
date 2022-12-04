@@ -9,7 +9,10 @@ public interface ProductController {
 
     public Map<String, Object> createProduct(Product product);
 
-    public Map<String, Object> getProducts();
+    public Map<String, Object> getProductsCustomer();
+    public Map<String, Object> getProductsStore(String idStore);
+
+    public Map<String, Object> findProducts(String findParam);
     public Map<String, Object>  updateProduct(String id, Product product);
 
     public Map<String, Object> deleteProduct(String id);

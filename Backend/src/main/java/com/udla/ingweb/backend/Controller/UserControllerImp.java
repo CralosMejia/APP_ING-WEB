@@ -1,8 +1,11 @@
 package com.udla.ingweb.backend.Controller;
 
+import com.udla.ingweb.backend.Entity.Product;
 import com.udla.ingweb.backend.Entity.User;
+import com.udla.ingweb.backend.Model.ProductRepository;
 import com.udla.ingweb.backend.Model.UserRepository;
-import com.udla.ingweb.backend.Security.config.JwtIO;
+import com.udla.ingweb.backend.Model.Security.Exceptions.errorMessage;
+import com.udla.ingweb.backend.Model.Security.config.JwtIO;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,12 @@ public class UserControllerImp implements UserController {
 
     @Autowired
     private JwtIO jwtio;
+
+    @Autowired
+    private ProductRepository productRepo;
+
+    @Autowired
+    private SaleController saleController;
 
     @Override
     public Map<String, Object> createUser(User user) {
@@ -106,6 +115,91 @@ public class UserControllerImp implements UserController {
 
         respJson.put("user",usersave.get());
         return respJson;
+    }
+
+    @Override
+    public Map<String, Object> addProdShoppingCar(String id, String prodId,int amount) throws errorMessage {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        Optional<User> usersave = userRepo.findById(id);
+        Optional<Product> productsave = productRepo.findById(prodId);
+        int limitAmount = productRepo.findById(prodId).get().getAmount();
+        int indexProd = usersave.get().indexOfProductInShoppingCar(prodId);
+
+        if(amount <= 0){
+            message("Invalid amount");
+        }
+
+        if(amount > limitAmount){
+            message("Not enough units in stock");
+        }
+
+        if(indexProd == -1){
+            productsave.get().setAmount(amount);
+            usersave.get().addProdShoppingCar(productsave.get());
+        }else{
+            int productAmountUser = usersave.get().getShoppingCar().get(indexProd).getAmount();
+
+            if(productAmountUser + amount <= limitAmount){
+                usersave.get().getShoppingCar().get(indexProd).setAmount(productAmountUser + amount);
+                userRepo.save(usersave.get());
+            }else {
+                message("Not enough units in stock");
+            }
+        }
+
+        userRepo.save(usersave.get());
+
+
+        respJson.put("Msg","Product add correctly to shopping car");
+        return respJson;
+    }
+
+    @Override
+    public Map<String, Object> deleteProdShoppingCar(String id, String prodId,int amount) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        Optional<User> usersave = userRepo.findById(id);
+        Optional<Product> productsave = productRepo.findById(prodId);
+        int indexProd = usersave.get().indexOfProductInShoppingCar(prodId);
+        int productAmountUser = usersave.get().getShoppingCar().get(indexProd).getAmount();
+
+        if( productAmountUser <= amount){
+            usersave.get().deleteProdShoppingCar(productsave.get());
+            userRepo.save(usersave.get());
+        }else{
+            usersave.get().getShoppingCar().get(indexProd).setAmount(productAmountUser - amount);
+            userRepo.save(usersave.get());
+        }
+
+        respJson.put("Msg","Product deleted correctly to shopping car");
+        return respJson;
+    }
+
+    @Override
+    public Map<String, Object> buy(String userID) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        User usersave = userRepo.findById(userID).get();
+
+        saleController.createSale(userID,usersave.getShoppingCar());
+        usersave.deletedShoppingCar();
+        userRepo.save(usersave);
+
+        respJson.put("Msg","successful purchase");
+        return respJson;
+    }
+
+    @Override
+    public Map<String, Object> getShoppingCar(String userID) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        User usersave = userRepo.findById(userID).get();
+
+        respJson.put("ShoppingCar",usersave.getShoppingCar());
+        return respJson;
+    }
+
+
+    private void message(String message) throws errorMessage {
+        System.out.println(message);
+        throw new errorMessage(message);
     }
 
 

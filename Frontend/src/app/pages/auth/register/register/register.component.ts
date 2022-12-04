@@ -47,8 +47,8 @@ export class RegisterComponent implements OnInit {
       })
       return;
     }
-    this.userSrv.createUser(this.registerForm.value).subscribe(() => {
-        this.router.navigateByUrl('/');
+    this.userSrv.createUser(this.registerForm.value).subscribe((resp) => {
+      this.router.navigate(['/start/customer'],{queryParams: {idUser: resp.User.id}});
     });
   }
 

@@ -54,7 +54,7 @@ export class ProductsComponent implements OnInit {
   }
 
   loadProducts(){
-    this.prodSrv.getProducts(this.idUserLogin).subscribe((products:any)=> {
+    this.prodSrv.getProducts().subscribe((products:any)=> {
       this.productsList =[];
       this.productsList = products.Products;
     });

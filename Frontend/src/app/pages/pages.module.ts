@@ -10,6 +10,14 @@ import { RouterModule } from '@angular/router';
 import { RegisterComponent } from './auth/register/register/register.component';
 import { ProductsComponent } from './mantenimiento/products/products.component';
 import { StoresComponent } from './mantenimiento/stores/stores.component';
+import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { SharedModule } from '../shared/shared.module';
+import { CustomerComponent } from './features/customer/customer.component';
+import { ComponentsModule } from '../components/components.module';
+import { ShoppingcarComponent } from './features/shoppingcar/shoppingcar.component';
+import { YourpurchasesComponent } from './features/yourpurchases/yourpurchases.component';
+import { SellerComponent } from './features/seller/seller.component';
+import { StoreComponent } from './features/seller/store/store.component';
 
 
 
@@ -20,13 +28,20 @@ import { StoresComponent } from './mantenimiento/stores/stores.component';
     LoginComponent,
     RegisterComponent,
     ProductsComponent,
-    StoresComponent
+    StoresComponent,
+    CustomerComponent,
+    ShoppingcarComponent,
+    YourpurchasesComponent,
+    SellerComponent,
+    StoreComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    SharedModule,
+    ComponentsModule
     
   ],
   exports:[

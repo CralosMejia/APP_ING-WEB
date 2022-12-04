@@ -29,7 +29,7 @@ export class StoreService {
 
 
   getStores(userLoginID: string){
-    const url = `${base_url}/Stores/entry/${userLoginID}`;
+    const url = `${base_url}/Stores/entry`;
     return this.http.get(url,{
       headers:new HttpHeaders({
         'token' : this.token,
@@ -41,17 +41,8 @@ export class StoreService {
 
 
 
-  createStore(formData: any,userLoginID: string){
-    const store: Store =formData;
-    // console.log(store);
-    // console.log(user);
-    return this.http.post(`${base_url}/Stores/create`,{
-        "store":store,
-        "id":userLoginID
-    }).pipe(
-      tap((resp: any) => {
-      })
-  );
+  createStore(store: any,userLoginID: string){
+    return this.http.post(`${base_url}/Stores/create`,store);
   }
 
   deleteStore(id:String, userLoginID: string){
@@ -72,6 +63,32 @@ export class StoreService {
         'token':this.token
       }
     });
+  }
+
+  getStoresForUser(userLoginID: string){
+    const url = `${base_url}/Stores/entrySe/${userLoginID}`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      })
+    }).pipe(
+      map((resp:any)=>{
+        return resp.Stores;
+      })
+    )
+  }
+
+  findStore(storeId: string){
+    const url = `${base_url}/Stores/find/${storeId}`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      })
+    })
   }
 }
 

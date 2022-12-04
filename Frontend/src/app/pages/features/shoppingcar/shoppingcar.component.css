@@ -1,0 +1,30 @@
+.card{
+    margin: 30px;
+    display: flex;
+    flex-direction: row
+}
+
+.store-card-information{
+    border-left: 1px solid gray ;
+}
+
+
+.card-body input{
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.row .container{
+    height: 60vh;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+}
+
+.title{
+    margin-left: 10px;
+}
+
+.btn-buy{
+    width: 30vw;
+    margin: auto;
+}

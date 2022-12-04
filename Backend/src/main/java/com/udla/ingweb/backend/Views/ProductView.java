@@ -1,10 +1,9 @@
 package com.udla.ingweb.backend.Views;
 
 import com.udla.ingweb.backend.Controller.ProductController;
-import com.udla.ingweb.backend.Entity.Interfaces.AdminProduct;
-import com.udla.ingweb.backend.Entity.Interfaces.AdminUser;
-import com.udla.ingweb.backend.Security.Exceptions.errorMessage;
-import com.udla.ingweb.backend.Security.Validators.UserValidator;
+import com.udla.ingweb.backend.Entity.Interfaces.Products.AdminProduct;
+import com.udla.ingweb.backend.Model.Security.Exceptions.errorMessage;
+import com.udla.ingweb.backend.Model.Security.Validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +33,10 @@ public class ProductView {
         }
     }
 
-    @GetMapping(path = "/entry/{id}")
-    public ResponseEntity<?> getProducts(@PathVariable("id") String id){
+    @GetMapping(path = "/entryCustomer")
+    public ResponseEntity<?> getProducts(){
         try{
-            userValidator.validateID(id);
-            userValidator.rolValidate(id);
-            Map<String, Object> respJson = productController.getProducts();
+            Map<String, Object> respJson = productController.getProductsCustomer();
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
@@ -73,5 +70,26 @@ public class ProductView {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
         }
 
+    }
+
+
+    @GetMapping(path = "/find/{findParam}")
+    public ResponseEntity<?> findProducts(@PathVariable("findParam") String findParam){
+        try{
+            Map<String, Object> respJson = productController.findProducts(findParam);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping(path = "/entryStore/{id}")
+    public ResponseEntity<?> getProductsForStore(@PathVariable("id") String id){
+        try{
+            Map<String, Object> respJson = productController.getProductsStore(id);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
     }
 }

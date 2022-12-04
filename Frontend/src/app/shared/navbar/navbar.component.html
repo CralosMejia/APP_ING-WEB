@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" (click)="navigatetohome()">CORE</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" (click)="navigatetoShoppingCar()">ShoppingCar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" (click)="navigatetoYourPurchases()">Your purchases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" (click)="navigatetoStores()">Stores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" (click)="logout()">Logout</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search" [formGroup]="searchForm" (ngSubmit)="search()">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" formControlName="search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>

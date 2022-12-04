@@ -138,6 +138,43 @@ export class UserService {
     })
   }
 
+  addProductToShoppingCar(userId:string,productId:string, amount:number ){
+
+
+    return this.http.post(`${base_url}/Users/addprod`,{
+      'userId':userId,
+      'productId':productId,
+      'amount':amount
+    });
+  }
+
+  deleteProductToShoppingCar(userId:string,productId:string, amount:number ){
+    return this.http.delete(`${base_url}/Users/deleteprod`,{
+      headers: this.headers,
+      body:{
+        'userId':userId,
+        'productId':productId,
+        'amount':amount
+      }
+   });
+  }
+
+  getShoppingCar(userLoginID: string){
+    const url = `${base_url}/Users/shopping/${userLoginID}`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      }),
+      
+    })
+  }
+
+  buy(userId:string){
+    return this.http.post(`${base_url}/Users/buy`,userId);
+  }
+
 
 }
 

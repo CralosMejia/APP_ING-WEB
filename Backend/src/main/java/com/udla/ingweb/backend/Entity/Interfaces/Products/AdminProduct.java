@@ -1,4 +1,4 @@
-package com.udla.ingweb.backend.Entity.Interfaces;
+package com.udla.ingweb.backend.Entity.Interfaces.Products;
 
 import com.udla.ingweb.backend.Entity.Product;
 import lombok.Getter;

@@ -2,11 +2,12 @@ package com.udla.ingweb.backend.Views;
 
 import com.udla.ingweb.backend.Controller.UserController;
 import com.udla.ingweb.backend.Entity.Interfaces.AdminUser;
+import com.udla.ingweb.backend.Entity.Interfaces.Products.ProdUserID;
 import com.udla.ingweb.backend.Entity.User;
 
-import com.udla.ingweb.backend.Security.Exceptions.errorMessage;
-import com.udla.ingweb.backend.Security.Validators.UserValidator;
-import com.udla.ingweb.backend.Security.config.InterceptorJwtIO;
+import com.udla.ingweb.backend.Model.Security.Exceptions.errorMessage;
+import com.udla.ingweb.backend.Model.Security.Validators.UserValidator;
+import com.udla.ingweb.backend.Model.Security.config.InterceptorJwtIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +93,47 @@ public class UserView {
     public ResponseEntity<?> findUser(@PathVariable("id") String id){
         try{
             Map<String, Object> respJson = userController.findUser(id);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @PostMapping(path = "/addprod")
+    public ResponseEntity<?> addProdShoppingCar(@RequestBody ProdUserID params){
+        try{
+            Map<String, Object> respJson = userController.addProdShoppingCar(params.userId, params.productId,params.amount);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (errorMessage e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @DeleteMapping(value = "/deleteprod")
+    public ResponseEntity<?> deleteProdShoppingCar(@RequestBody ProdUserID params){
+        try{
+            Map<String, Object> respJson = userController.deleteProdShoppingCar(params.userId, params.productId, params.amount);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+
+    }
+
+    @PostMapping(path = "/buy")
+    public ResponseEntity<?> buy(@RequestBody String UserID){
+        try{
+            Map<String, Object> respJson = userController.buy(UserID);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping(path = "/shopping/{id}")
+    public ResponseEntity<?> getShoppingCar(@PathVariable("id") String id){
+        try{
+            Map<String, Object> respJson = userController.getShoppingCar(id);
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);

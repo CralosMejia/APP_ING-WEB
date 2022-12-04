@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="container" *ngFor=" let sale of productsList">
+
+        <div class="card card-principal">
+            <div class="card-header">
+                <h5>Date: {{sale.date | date:'short':'IST'}}</h5>
+                <h5>Total: {{sale.total | currency:'USD':'symbol'}}</h5>
+            </div>
+            <div class="card-body">
+                <!-- Card product -->
+                <div class="card" *ngFor="let prod of sale.products">
+                    <div class="card-body col-6">
+                        <h5 class="card-title">{{prod.name}}</h5>
+                        <h6>units: {{prod.amount}}</h6>
+                        <h6>Unit value: {{prod.price | currency:'USD':'symbol'}}</h6>
+                        <h6>Subtotal: {{prod.price * prod.amount | currency:'USD':'symbol'}}</h6>
+                        <p class="card-text">{{prod.description}}</p>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+        </div>
+
+        
+    </div>
+</div>

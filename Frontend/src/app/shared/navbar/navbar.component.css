@@ -1,0 +1,8 @@
+.navbar{
+    height: 12vh;
+    padding: 20px;
+}
+
+.nav-link, .navbar-brand{
+    cursor: pointer;
+}
