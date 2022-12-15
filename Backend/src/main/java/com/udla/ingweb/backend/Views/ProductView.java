@@ -2,6 +2,7 @@ package com.udla.ingweb.backend.Views;
 
 import com.udla.ingweb.backend.Controller.ProductController;
 import com.udla.ingweb.backend.Entity.Interfaces.Products.AdminProduct;
+import com.udla.ingweb.backend.Entity.Interfaces.Sh.Sh;
 import com.udla.ingweb.backend.Model.Security.Exceptions.errorMessage;
 import com.udla.ingweb.backend.Model.Security.Validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,10 @@ public class ProductView {
     }
 
 
-    @GetMapping(path = "/find/{findParam}")
-    public ResponseEntity<?> findProducts(@PathVariable("findParam") String findParam){
+    @PostMapping (path = "/find")
+    public ResponseEntity<?> findProducts(@RequestBody Sh findParam){
         try{
-            Map<String, Object> respJson = productController.findProducts(findParam);
+            Map<String, Object> respJson = productController.findProducts(findParam.getParam(), findParam.getUserId());
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);

@@ -1,17 +1,16 @@
 package com.udla.ingweb.backend.Controller;
 
-import com.udla.ingweb.backend.Entity.Product;
-import com.udla.ingweb.backend.Entity.Sale;
-import com.udla.ingweb.backend.Entity.Store;
-import com.udla.ingweb.backend.Entity.User;
+import com.udla.ingweb.backend.Entity.*;
+import com.udla.ingweb.backend.Entity.Interfaces.Products.BestSellProduct;
 import com.udla.ingweb.backend.Model.ProductRepository;
+import com.udla.ingweb.backend.Model.RelationProductSearchRepository;
 import com.udla.ingweb.backend.Model.SaleRepository;
-import com.udla.ingweb.backend.Model.StoreReposiroty;
 import com.udla.ingweb.backend.Model.Security.Exceptions.errorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -23,7 +22,7 @@ public class SaleControllerImp implements SaleController{
     @Autowired
     private ProductRepository productRepo;
     @Autowired
-    private StoreReposiroty storeRepo;
+    private RelationProductSearchRepository rpsRepo;
 
     @Override
     public Map<String, Object> getSales(String userId) {
@@ -34,6 +33,61 @@ public class SaleControllerImp implements SaleController{
 
         respJson.put("Sales",salesSave);
         return respJson;
+    }
+
+    @Override
+    public Map<String, Object> getRelation(String productId) {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        List<RelationProductSearch> rpsList = rpsRepo.findAll();
+        rpsList.forEach(relationProductSearch -> {
+            if(relationProductSearch.getIdProduct().equals(productId)){
+                respJson.put("ParamSearch",relationProductSearch.getListSearchParams());
+            }
+        });
+        
+        return respJson;
+    }
+
+    @Override
+    public Map<String, Object> getBestSellingProduct(Date startDate) {
+        Date endDate= new Date();
+
+
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        List<Sale> salesSave = saleRepo.findAll().stream().filter(sale -> (sale.getDate().compareTo(startDate) >=0  && sale.getDate().compareTo(endDate) <= 0)
+        ).toList();
+
+        List<BestSellProduct> bsp = new ArrayList<>();
+        AtomicBoolean aux= new AtomicBoolean(false);
+        salesSave.forEach(sale -> {
+            sale.getProducts().forEach(product -> {
+                if(bsp.isEmpty()) {
+                    float sell = product.getAmount() * product.getPrice();
+                    bsp.add(new BestSellProduct(product.getName(), sale.getId(), sell));
+                }else {
+                    aux.set(true);
+                    AtomicReference<Float> sellPro= new AtomicReference<>((float) 0);
+                    bsp.forEach(bestSellProduct -> {
+                        if(bestSellProduct.getId().equals(product.getId())){
+                            bestSellProduct.setTotal(bestSellProduct.getTotal()+(product.getAmount() * product.getPrice()));
+                            aux.set(false);
+                        }
+                    });
+                    if(aux.get()){
+                        sellPro.set(product.getAmount() * product.getPrice());
+                        bsp.add(new BestSellProduct(product.getName(), sale.getId(), sellPro.get()));
+                    }
+                }
+            });
+        });
+
+
+        respJson.put("BestSellProduct",getMasValueBestSeller(bsp));
+        return respJson;
+    }
+
+    private BestSellProduct getMasValueBestSeller(List<BestSellProduct> bsp){
+        return bsp.stream().max(Comparator.comparingDouble(BestSellProduct::getTotal)).get();
     }
 
     @Override

@@ -19,11 +19,11 @@ export class ProductCardsService {
     this.products$= new Subject();
   }
 
-  changeSearchParameter(search:string){
+  changeSearchParameter(search:string, userid:string){
     this.searchParameter = search;
 
 
-    this.prodSrv.findProducts(search).subscribe((products:Product[]) =>{
+    this.prodSrv.findProducts(search,userid).subscribe((products:Product[]) =>{
       this.products = products;
       
     })

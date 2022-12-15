@@ -70,20 +70,18 @@ export class ProductService {
     });
   }
 
-  findProducts(param: string){
-    const url = `${base_url}/Produtcs/find/${param}`;
-    return this.http.get<Product[]>(url,{
-      headers:new HttpHeaders({
-        'token' : this.token,
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin' : "*"
-      })
+  findProducts(param: string,userId: string){
+    const url = `${base_url}/Produtcs/find`;
+    return this.http.post<Product[]>(url,{
+      param,
+      userId
     }).pipe(
-      map((resp:any) => {
+      map((resp:any) =>{
         return resp.Products;
       })
     )
   }
+  
 
 
   getProductsStore(idStore:string){

@@ -1,6 +1,7 @@
 package com.udla.ingweb.backend.Controller;
 
 import com.udla.ingweb.backend.Entity.Product;
+import com.udla.ingweb.backend.Entity.SearchHistory;
 import com.udla.ingweb.backend.Entity.Store;
 import com.udla.ingweb.backend.Model.ProductRepository;
 import com.udla.ingweb.backend.Model.StoreReposiroty;
@@ -16,7 +17,9 @@ public class ProductControllerImp implements ProductController {
     @Autowired
     private ProductRepository productRepo;
     @Autowired
-    private StoreReposiroty storeRepo;
+    private PurchaseProcessController ppControl;
+    @Autowired
+    private SearchHistoryController shController;
 
 
     @Override
@@ -65,22 +68,35 @@ public class ProductControllerImp implements ProductController {
     }
 
     @Override
-    public Map<String, Object> findProducts(String findParam) {
+    public Map<String, Object> findProducts(String findParam,String userId) {
         Map<String, Object> respJson = new HashMap<String,Object>();
-
-
-        List<Product> products= new ArrayList<Product>(productRepo.findAll());
-        findParam.toLowerCase();
+        List<String> splited = Arrays.stream(findParam.split(" ")).toList();
+        List<Product> products= new ArrayList<Product>(productRepo.findAll()) ;
+        List<Product> result = new ArrayList<>();
 
         products.removeIf(product ->
                 (product.getAmount() == 0));
 
         if(!findParam.equals("allproductstobuy")){
-            products.removeIf(product ->
-                    (!product.getName().toLowerCase().contains(findParam) && !product.getDescription().contains(findParam)));
+            splited.forEach(s -> {
+                products.forEach(product -> {
+                    if(product.getName().toLowerCase().contains(s.toLowerCase()) || product.getDescription().contains(s.toLowerCase())){
+
+                        if(!result.stream().anyMatch(product1 -> product1.getId().equals(product.getId()))){
+                            result.add(product);
+                        }
+                    }
+                });
+            });
         }
 
-        respJson.put("Products",products);
+        if(!result.isEmpty()){
+            String idProcess = ppControl.obtainIdProcess(userId);
+            SearchHistory sh = new SearchHistory(userId,findParam,result,idProcess);
+            shController.createSearchHistory(sh);
+        }
+
+        respJson.put("Products",result);
         return respJson;
     }
 

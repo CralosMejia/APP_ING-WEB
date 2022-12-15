@@ -24,6 +24,7 @@ export class StoreComponent implements OnInit {
   public idUserLogin:string;
   public arrayProducts:Product[] = [];
   public productsList: Sale[]=[];
+  public searchParams:string[]=[];
   public createProdForm:FormGroup;
 
 
@@ -153,8 +154,10 @@ export class StoreComponent implements OnInit {
 
   seeSales(idProd:string){
     this.saleSrv.getSalesProducts(idProd,this.idUserLogin).subscribe((resp:any)=>{
-      console.log(resp.Sales);
       this.productsList = resp.Sales;
+    })
+    this.saleSrv.getRelations(idProd).subscribe((resp:any)=>{
+      this.searchParams = resp.ParamSearch;
     })
   }
 

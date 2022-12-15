@@ -42,5 +42,16 @@ export class SaleService {
     });
   }
 
+  getRelations(productId:string){
+    const url = `${base_url}/Sales/relation/${productId}`;
+    return this.http.get(url,{
+      headers:new HttpHeaders({
+        'token' : this.token,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin' : "*"
+      })
+    })
+  }
+
 
 }

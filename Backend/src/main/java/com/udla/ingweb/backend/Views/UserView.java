@@ -1,5 +1,6 @@
 package com.udla.ingweb.backend.Views;
 
+import com.udla.ingweb.backend.Controller.SearchHistoryController;
 import com.udla.ingweb.backend.Controller.UserController;
 import com.udla.ingweb.backend.Entity.Interfaces.AdminUser;
 import com.udla.ingweb.backend.Entity.Interfaces.Products.ProdUserID;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -139,6 +142,8 @@ public class UserView {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
         }
     }
+
+
 
 
 

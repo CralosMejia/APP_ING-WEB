@@ -28,6 +28,9 @@ public class UserControllerImp implements UserController {
     @Autowired
     private SaleController saleController;
 
+    @Autowired
+    private PurchaseProcessController ppControl;
+
     @Override
     public Map<String, Object> createUser(User user) {
         Map<String, Object> respJson = new HashMap<String,Object>();
@@ -179,11 +182,15 @@ public class UserControllerImp implements UserController {
         Map<String, Object> respJson = new HashMap<String,Object>();
         User usersave = userRepo.findById(userID).get();
 
-        saleController.createSale(userID,usersave.getShoppingCar());
-        usersave.deletedShoppingCar();
-        userRepo.save(usersave);
+        if(!usersave.getShoppingCar().isEmpty()){
+            ppControl.finishProcess(userID);
+            saleController.createSale(userID,usersave.getShoppingCar());
+            usersave.deletedShoppingCar();
+            userRepo.save(usersave);
+            respJson.put("Msg","successful purchase");
 
-        respJson.put("Msg","successful purchase");
+        }
+
         return respJson;
     }
 

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -42,6 +44,28 @@ public class SalesView {
             userValidator.validateID(ids.getIdUser());
             userValidator.rolValidateSeller(ids.getIdUser());
             Map<String, Object> respJson = salesController.getSalesProd(ids.getIdProd());
+            return new ResponseEntity<Map<String, Object>>(respJson, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping(path = "/relation/{id}")
+    public ResponseEntity<?> getRelation(@PathVariable String id){
+        try{
+            Map<String, Object> respJson = salesController.getRelation(id);
+            return new ResponseEntity<Map<String, Object>>(respJson, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @PostMapping(path = "/best-selling")
+    public ResponseEntity<?> getBestSellingProduct(@RequestBody String date){
+        try{
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date datea =formato.parse(date);
+            Map<String, Object> respJson = salesController.getBestSellingProduct(datea);
             return new ResponseEntity<Map<String, Object>>(respJson, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);

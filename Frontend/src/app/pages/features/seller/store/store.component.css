@@ -19,7 +19,18 @@
     margin-bottom: 100px;
 }
 
-.col-products, .col-sales{
+.col-products{
     height: 65vh;
+    
+}
+
+
+.row-sub-sales{
+    height: 49vh;
+    overflow-x: scroll;
+}
+
+.row-sub-sales2{
+    height: 20vh;
     overflow-x: scroll;
 }

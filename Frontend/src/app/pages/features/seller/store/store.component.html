@@ -23,10 +23,7 @@
     </div>
     <div class="row create-product " *ngIf="isCreatedProduct">
         <h2>Create Product</h2>
-        <form
-            (ngSubmit)="createProd()" 
-            [formGroup]="createProdForm"
-        >
+        <form (ngSubmit)="createProd()" [formGroup]="createProdForm">
             <div class="mb-3">
                 <label class="form-label">Name</label>
                 <input type="text" class="form-control" formControlName="name">
@@ -44,7 +41,7 @@
                 <input type="text" class="form-control" formControlName="description">
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
-            <button  class="btn btn-danger" (click)="createProductBool()">Cancel</button>
+            <button class="btn btn-danger" (click)="createProductBool()">Cancel</button>
         </form>
     </div>
 
@@ -70,28 +67,36 @@
             </div>
         </div>
         <div class="col col-sales">
-            <h2>Sales</h2>
-            <div class="container" *ngFor=" let sale of productsList">
+            <div class="row row-sub-sales">
+                <h2>Sales</h2>
+                <div class="container" *ngFor=" let sale of productsList">
 
-                <div class="card card-principal">
-                    <div class="card-header">
-                        <h5>Date: {{sale.date | date:'short':'IST'}}</h5>
-                        <h5>Total: {{sale.total | currency:'USD':'symbol'}}</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Card product -->
-                        <div class="card" *ngFor="let prod of sale.products">
-                            <div class="card-body col-6">
-                                <h5 class="card-title">{{prod.name}}</h5>
-                                <h6>units: {{prod.amount}}</h6>
-                                <h6>Unit value: {{prod.price | currency:'USD':'symbol'}}</h6>
-                                <h6>Subtotal: {{prod.price * prod.amount | currency:'USD':'symbol'}}</h6>
-                                <p class="card-text">{{prod.description}}</p>
-                            </div>
+                    <div class="card card-principal">
+                        <div class="card-header">
+                            <h5>Date: {{sale.date | date:'short':'IST'}}</h5>
+                            <h5>Total: {{sale.total | currency:'USD':'symbol'}}</h5>
                         </div>
-                        <!--  -->
+                        <div class="card-body">
+                            <!-- Card product -->
+                            <div class="card" *ngFor="let prod of sale.products">
+                                <div class="card-body col-6">
+                                    <h5 class="card-title">{{prod.name}}</h5>
+                                    <h6>units: {{prod.amount}}</h6>
+                                    <h6>Unit value: {{prod.price | currency:'USD':'symbol'}}</h6>
+                                    <h6>Subtotal: {{prod.price * prod.amount | currency:'USD':'symbol'}}</h6>
+                                    <p class="card-text">{{prod.description}}</p>
+                                </div>
+                            </div>
+                            <!--  -->
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="row row-sub-sales2">
+                <h2>Search Parameters</h2>
+                <ul *ngFor="let param of searchParams">
+                    <li>{{param}}</li>
+                </ul>
             </div>
         </div>
     </div>
