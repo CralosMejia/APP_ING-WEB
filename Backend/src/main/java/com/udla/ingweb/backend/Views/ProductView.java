@@ -26,7 +26,7 @@ public class ProductView {
     public ResponseEntity<?> createProduct(@RequestBody AdminProduct params){
         try{
             userValidator.validateID(params.ID);
-            userValidator.rolValidate(params.ID);
+            userValidator.rolValidateSeller(params.ID);
             Map<String, Object> respJson = productController.createProduct(params.product);
             return new ResponseEntity<Map<String, Object>>(respJson, HttpStatus.OK);
         }catch (errorMessage e){
@@ -49,7 +49,7 @@ public class ProductView {
                                         @PathVariable("id") String id)
     {
         try{
-            userValidator.rolValidate(params.ID);
+            userValidator.rolValidateSeller(params.ID);
             userValidator.validatePUT(params.product);
 
             Map<String, Object> respJson = productController.updateProduct(id,params.product);
@@ -64,7 +64,7 @@ public class ProductView {
                                         @RequestBody String LoginUserID){
         try{
             userValidator.validateID(LoginUserID);
-            userValidator.rolValidate(LoginUserID);
+            userValidator.rolValidateSeller(LoginUserID);
             Map<String, Object> respJson = productController.deleteProduct(id);
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (errorMessage e){
@@ -88,6 +88,16 @@ public class ProductView {
     public ResponseEntity<?> getProductsForStore(@PathVariable("id") String id){
         try{
             Map<String, Object> respJson = productController.getProductsStore(id);
+            return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping(path = "/healthProducts")
+    public ResponseEntity<?> getHealthProducts(){
+        try{
+            Map<String, Object> respJson = productController.getHealthProducts();
             return new ResponseEntity<Map<String, Object>>(respJson,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_GATEWAY);

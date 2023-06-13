@@ -5,9 +5,15 @@ import com.udla.ingweb.backend.Entity.SearchHistory;
 import com.udla.ingweb.backend.Entity.Store;
 import com.udla.ingweb.backend.Model.ProductRepository;
 import com.udla.ingweb.backend.Model.StoreReposiroty;
+import com.udla.ingweb.backend.Util.ClaveUtils;
+import com.udla.ingweb.backend.Util.IVGenerator;
+import com.udla.ingweb.backend.Util.OpenSSLUtil;
+import com.udla.ingweb.backend.Util.SerializacionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.*;
 
 @Controller
@@ -20,6 +26,9 @@ public class ProductControllerImp implements ProductController {
     private PurchaseProcessController ppControl;
     @Autowired
     private SearchHistoryController shController;
+
+    @Autowired
+    private OpenSSLUtil openSSLUtil;
 
 
     @Override
@@ -65,6 +74,33 @@ public class ProductControllerImp implements ProductController {
         respJson.put("Products",products);
 
         return respJson;
+    }
+
+    //Ecriptado
+    @Override
+    public Map<String, Object> getHealthProducts() throws Exception {
+        Map<String, Object> respJson = new HashMap<String,Object>();
+        String claveString = "UDLA2023";
+
+
+
+
+        List<Product> products= new ArrayList<Product>(productRepo.findAll());
+
+        products.removeIf(product ->
+                (Objects.isNull(product.getCategoria()) || !product.getCategoria().equals("SALUD")));
+
+        byte[] datosEnBytes = SerializacionUtil.convertirListaObjetosABytes(products);
+
+        byte[] clave = ClaveUtils.generarClave(claveString);
+        byte[] iv = IVGenerator.generateIV(16);
+
+        byte[] datosEncriptados = openSSLUtil.encrypt(datosEnBytes, clave, iv);
+
+        respJson.put("Products",datosEncriptados);
+
+        return respJson;
+
     }
 
     @Override
@@ -116,6 +152,9 @@ public class ProductControllerImp implements ProductController {
         }
         if(product.getAmount() != 0){
             productsave.get().setAmount(product.getAmount());
+        }
+        if(!Objects.isNull(product.getCategoria())){
+            productsave.get().setCategoria(product.getCategoria());
         }
         productRepo.save(productsave.get());
 

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PagesRoutingModule } from './pages/pages.routing';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [
   {path:'', redirectTo:'/start/customer', pathMatch:'full'},
@@ -11,6 +12,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     PagesRoutingModule
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],providers:[
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ]
 })
 export class AppRoutingModule { }

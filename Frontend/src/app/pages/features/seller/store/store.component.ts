@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Product } from 'src/app/models/Product';
+import { Categoria, Product } from 'src/app/models/Product';
 import { Sale } from 'src/app/models/sale';
 import { Store } from 'src/app/models/Store';
 import { ProductService } from 'src/app/services/product.service';
@@ -49,6 +49,7 @@ export class StoreComponent implements OnInit {
       name:['', Validators.required],
       price:[0, Validators.required],
       amount:[0, Validators.required],
+      categoria:['', Validators.required],
       description:['', Validators.required]
 
     })
@@ -123,27 +124,28 @@ export class StoreComponent implements OnInit {
     let description =(<HTMLInputElement>document.getElementById(`form-prod-description-${idProd}`)).value;
     let storeID= this.idStore;
     let id = idProd;
+    let categoria= (<HTMLInputElement>document.getElementById(`form-prod-categoria-${idProd}`)).value;
 
 
-    let prod:Product ={id,name,price,amount,description,storeID};
-    
+    let prod:Product ={id,name,price,amount,description,storeID,categoria};
+
     this.proSrv.updateProduct(prod,this.idUserLogin).subscribe(()=>{
       this.loadStore();
       this.loadProducts();
     })
 
   }
-  
+
   createProd(){
     if(this.createProdForm.invalid){
       return;
     }
-      
+
     let product:Product = this.createProdForm.value;
     product.storeID = this.idStore;
     this.proSrv.createProduct(product,this.idUserLogin).subscribe(() => {
       this.loadProducts();
-      this.createProductBool(); 
+      this.createProductBool();
       Swal.fire('Product Created');
 
     });
@@ -167,9 +169,9 @@ export class StoreComponent implements OnInit {
       description:"",
       price:0,
       amount:0
-    }); 
+    });
   }
 
 
- 
+
 }

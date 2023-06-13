@@ -19,7 +19,22 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
+    //Desarrollo
     @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
+    }
+
+    //Produccion
+    /*@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -30,6 +45,6 @@ public class BackendApplication {
                         .allowedHeaders("*");
             }
         };
-    }
+    }*/
 
 }

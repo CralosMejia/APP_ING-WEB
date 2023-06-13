@@ -37,6 +37,13 @@
                 <input type="number" min="0" class="form-control" formControlName="amount">
             </div>
             <div class="mb-3">
+              <label class="form-label">Category</label>
+              <select class="form-select" aria-label="Default select example" formControlName="categoria">
+                <option value="SALUD">SALUD</option>
+                <option value="CONSTRUCCION">CONSTRUCCION</option>
+              </select>
+            </div>
+            <div class="mb-3">
                 <label class="form-label">Description</label>
                 <input type="text" class="form-control" formControlName="description">
             </div>
@@ -60,6 +67,7 @@
                             value="{{prod.amount}}">
                         <input type="text" class="form-control" [value]="prod.description"
                             id="form-prod-description-{{prod.id}}">
+                        <input type="text" value="{{prod.categoria}}" disabled id="form-prod-categoria-{{prod.id}}">
                         <button type="submit" class="btn btn-primary" (click)="updateProd(prod.id)">update</button>
                         <button type="submit" class="btn btn-dark" (click)="seeSales(prod.id)">See Sales</button>
                     </form>
