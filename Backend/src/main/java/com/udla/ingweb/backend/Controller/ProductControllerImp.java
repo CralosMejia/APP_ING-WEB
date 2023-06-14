@@ -1,5 +1,7 @@
 package com.udla.ingweb.backend.Controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.udla.ingweb.backend.Entity.Product;
 import com.udla.ingweb.backend.Entity.SearchHistory;
 import com.udla.ingweb.backend.Entity.Store;
@@ -12,6 +14,9 @@ import com.udla.ingweb.backend.Util.SerializacionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -81,30 +86,96 @@ public class ProductControllerImp implements ProductController {
     @Override
     public Map<String, Object> getHealthProducts() throws Exception {
         Map<String, Object> respJson = new HashMap<String,Object>();
-        String claveString = "UDLA2023";
-        String ivS="1234567890123456";
-
-
-
-
+        String clave = "UDLA2023";
+        String iv="1234567890123456";
 
         List<Product> products= new ArrayList<Product>(productRepo.findAll());
 
         products.removeIf(product ->
                 (Objects.isNull(product.getCategoria()) || !product.getCategoria().equals("SALUD")));
+        try{
+        // Convertir la clave y el IV de cadenas de texto a bytes
+        byte[] claveBytes = ClaveUtils.generarClave(clave);
+        byte[] ivBytes = iv.getBytes(StandardCharsets.UTF_8);
 
-        byte[] datosEnBytes = SerializacionUtil.convertirListaObjetosABytes(products);
+        // Crear una instancia de la clase Cipher con el modo y el algoritmo adecuados
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-        byte[] clave = ClaveUtils.generarClave(claveString);
-        byte[] iv = ivS.getBytes(StandardCharsets.UTF_8);
+        // Crear una clave secreta a partir de los bytes de la clave
+        SecretKeySpec secretKeySpec = new SecretKeySpec(claveBytes, "AES");
 
-        byte[] datosEncriptados = openSSLUtil.encrypt(datosEnBytes, clave, iv);
+        // Crear un objeto IvParameterSpec a partir de los bytes del IV
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
 
-        respJson.put("Products",datosEncriptados);
+        // Configurar el cifrado en modo de encriptación y con la clave y el IV adecuados
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+
+        // Convertir la lista de objetos a una cadena JSON
+        String datosJson = convertirListaObjetosAJson(products);
+
+        // Encriptar los datos
+        byte[] datosEncriptados = cipher.doFinal(datosJson.getBytes(StandardCharsets.UTF_8));
+
+        // Codificar los datos encriptados en formato Base64
+        String datosEncriptadosBase64 = Base64.getEncoder().encodeToString(datosEncriptados);
+
+        System.out.println(verificarEncriptacion(clave,iv,datosEncriptadosBase64));
+        respJson.put("Products",datosEncriptadosBase64);
 
         return respJson;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return respJson;
+    }
 
     }
+
+    private static String convertirListaObjetosAJson(List<Product> datos) {
+        // Crear una instancia de Gson
+        Gson gson = new GsonBuilder().create();
+
+        // Convertir la lista de objetos a una cadena JSON
+        String datosJson = gson.toJson(datos);
+
+        return datosJson;
+    }
+
+    public static boolean verificarEncriptacion(String clave, String iv, String datosEncriptados) {
+        try {
+            // Convertir la clave y el IV de cadenas de texto a bytes
+            byte[] claveBytes = ClaveUtils.generarClave(clave);
+            byte[] ivBytes = iv.getBytes(StandardCharsets.UTF_8);
+
+            // Decodificar los datos encriptados desde Base64
+            byte[] datosEncriptadosBytes = Base64.getDecoder().decode(datosEncriptados);
+
+            // Crear una instancia de la clase Cipher con el modo y el algoritmo adecuados
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+            // Crear una clave secreta a partir de los bytes de la clave
+            SecretKeySpec secretKeySpec = new SecretKeySpec(claveBytes, "AES");
+
+            // Crear un objeto IvParameterSpec a partir de los bytes del IV
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
+
+            // Configurar el cifrado en modo de desencriptación y con la clave y el IV adecuados
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+
+            // Desencriptar los datos
+            byte[] datosDesencriptados = cipher.doFinal(datosEncriptadosBytes);
+
+            // Convertir los datos desencriptados a una cadena de texto
+            String datosDesencriptadosStr = new String(datosDesencriptados, StandardCharsets.UTF_8);
+
+
+            // Verificar si la desencriptación fue exitosa
+            return datosDesencriptadosStr != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     @Override
     public Map<String, Object> findProducts(String findParam,String userId) {
