@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -81,6 +82,8 @@ public class ProductControllerImp implements ProductController {
     public Map<String, Object> getHealthProducts() throws Exception {
         Map<String, Object> respJson = new HashMap<String,Object>();
         String claveString = "UDLA2023";
+        String ivS="1234567890123456";
+
 
 
 
@@ -93,7 +96,7 @@ public class ProductControllerImp implements ProductController {
         byte[] datosEnBytes = SerializacionUtil.convertirListaObjetosABytes(products);
 
         byte[] clave = ClaveUtils.generarClave(claveString);
-        byte[] iv = IVGenerator.generateIV(16);
+        byte[] iv = ivS.getBytes(StandardCharsets.UTF_8);
 
         byte[] datosEncriptados = openSSLUtil.encrypt(datosEnBytes, clave, iv);
 
