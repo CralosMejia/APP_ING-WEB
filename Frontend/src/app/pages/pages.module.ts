@@ -41,8 +41,11 @@ import { StoreComponent } from './features/seller/store/store.component';
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    ComponentsModule
-    
+    ComponentsModule,
+
+
+
+
   ],
   exports:[
     UsersComponent

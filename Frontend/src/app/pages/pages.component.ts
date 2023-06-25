@@ -1,7 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild,Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { DOCUMENT } from '@angular/common';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-pages',
@@ -10,13 +12,17 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
 })
 export class PagesComponent implements OnInit {
 
+  profileJson: string = null;
 
 
-  constructor( ) { }
+
+  constructor(@Inject(DOCUMENT) public document: Document,
+  public auth: AuthService ) { }
 
   ngOnInit(): void {
+
   }
 
-  
+
 
 }

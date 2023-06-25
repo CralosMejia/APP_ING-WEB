@@ -16,15 +16,15 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   get token():string{
-   
+
     return localStorage.getItem('token') || '';
 
   }
 
   get headers(){
-    
+
     return new HttpHeaders().set('Content-Type', 'application/json').append('token',this.token);
-    
+
   }
 
 
@@ -74,11 +74,10 @@ export class UserService {
     });
   }
 
-  login(formData: any){
-    const user:LoginForm =formData;
+  login(email:string,name:string){
     const url = `${base_url}/login`;
 
-    return this.http.post(url,user,{
+    return this.http.post(url,{email,name},{
       headers: new HttpHeaders({
         'token' : this.token,
         'Content-Type': 'application/json',
@@ -122,7 +121,7 @@ export class UserService {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin' : "*"
       }),
-      
+
     })
   }
 
@@ -134,7 +133,7 @@ export class UserService {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin' : "*"
       }),
-      
+
     })
   }
 
@@ -167,7 +166,7 @@ export class UserService {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin' : "*"
       }),
-      
+
     })
   }
 

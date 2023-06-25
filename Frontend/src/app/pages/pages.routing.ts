@@ -14,9 +14,9 @@ import { PagesComponent } from './pages.component';
 
 
 
-
+//path:'start', component:PagesComponent, canActivate:[AuthGuard],children
 const routes:Routes=[
-    {path:'start', component:PagesComponent, canActivate:[AuthGuard],children:
+    {path:'start', component:PagesComponent,children:
       [
         {path:'customer', component:CustomerComponent},
         {path:'shoppingcar', component:ShoppingcarComponent},
@@ -26,13 +26,12 @@ const routes:Routes=[
 
       ]
     },
-    {path:'login', component:LoginComponent},
-    {path:'register', component:RegisterComponent},
+    {path:'login', component:LoginComponent}
 
 
-  
+
 ];
- 
+
 @NgModule({
   declarations: [],
   imports: [
