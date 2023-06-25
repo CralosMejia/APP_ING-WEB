@@ -20,6 +20,7 @@ public class BackendApplication {
     }
 
     //Desarrollo
+    /*
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -32,9 +33,10 @@ public class BackendApplication {
             }
         };
     }
+    */
 
     //Produccion
-    /*@Bean
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -45,6 +47,6 @@ public class BackendApplication {
                         .allowedHeaders("*");
             }
         };
-    }*/
+    }
 
 }
