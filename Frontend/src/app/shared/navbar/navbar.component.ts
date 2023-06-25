@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit {
     // this.userSrv.logout();
     this.auth.logout({
       logoutParams: {
-        returnTo: 'http://localhost:4200/#/login'
+        returnTo: 'https://frontend-core-angular-ingweb2022-2023.onrender.com/#/login'
       }
     });
     // this.router.navigateByUrl('/login');
