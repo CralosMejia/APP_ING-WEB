@@ -4,7 +4,7 @@ import { PagesRoutingModule } from './pages/pages.routing';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [
-  {path:'', redirectTo:'/start/customer', pathMatch:'full'},
+   {path:'', redirectTo:'/start/customer', pathMatch:'full'},
 ];
 
 @NgModule({

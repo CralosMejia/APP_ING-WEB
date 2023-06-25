@@ -1,9 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit,Inject } from '@angular/core';
 import { FormBuilder, FormGroup} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { NavbarService } from 'src/app/services/communication/navbar.service';
 import { UserService } from 'src/app/services/user.service';
+import { DOCUMENT } from '@angular/common';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +18,7 @@ export class NavbarComponent implements OnInit {
   public parameter:string;
   public idUserLogin:string;
 
+  profileJson: string = null;
 
   private searchparameter = new Subject<string>();
     searchparameter$ = this.searchparameter.asObservable();
@@ -25,10 +28,18 @@ export class NavbarComponent implements OnInit {
               private router:Router,
               private fb:FormBuilder,
               private cSrv: NavbarService,
-              private route:ActivatedRoute
-  ) { }
+              private route:ActivatedRoute,
+              @Inject(DOCUMENT) public document: Document,
+              public auth: AuthService
+  ) {
+  }
 
   ngOnInit(): void {
+
+    this.auth.user$.subscribe(
+      (profile) => (this.profileJson = JSON.stringify(profile, null, 2))
+    );
+    console.log(this.profileJson);
 
     this.getUserID();
 
@@ -44,8 +55,13 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(){
-    this.userSrv.logout();
-    this.router.navigateByUrl('/login');
+    // this.userSrv.logout();
+    this.auth.logout({
+      logoutParams: {
+        returnTo: 'http://localhost:4200/#/login'
+      }
+    });
+    // this.router.navigateByUrl('/login');
   }
 
   navigatetoShoppingCar(){
@@ -71,7 +87,7 @@ export class NavbarComponent implements OnInit {
     }
 
     this.cSrv.changeSearchParameter(this.parameter);
-      
+
   }
 
 

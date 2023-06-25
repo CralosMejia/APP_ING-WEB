@@ -25,20 +25,22 @@ public class AuthValidator {
         if(Objects.isNull(paramMap) ){
             message("Params invalid");
         }
-        if(!validatecredencials(paramMap.get("password"),paramMap.get("email"))){
+        if(!validatecredencials(paramMap.get("email"), paramMap.get("name"))){
             message("Credentials are invalid");
         }
     }
 
-    private boolean validatecredencials(String password, String email){
+    private boolean validatecredencials(String email, String name){
         List<User> users = userRepo.findAll();
-        Argon2 argon = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
         Optional<User> usersave = users.stream().filter(user -> email.equals(user.getEmail())).findFirst();
         if(usersave.isEmpty()){
-            return false;
+            User user = new User();
+            user.setROL("USER");
+            user.setName(name);
+            user.setEmail(email);
+            userRepo.save(user);
         }
-        boolean checkCredentials = argon.verify(usersave.get().getPassword(), password);
-        return checkCredentials;
+        return true;
     };
 
     private void message(String message) throws errorMessage {
