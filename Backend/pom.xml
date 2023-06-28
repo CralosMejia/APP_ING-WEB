@@ -88,6 +88,22 @@
             <version>2.12.5</version>
         </dependency>
 
+        <!-- AWS SDK para Java -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>kms</artifactId>
+            <version>2.17.60</version> <!-- Reemplaza con la versión más reciente del SDK -->
+        </dependency>
+
+        <!-- Apache Commons Codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version> <!-- Reemplaza con la versión más reciente de Apache Commons Codec -->
+        </dependency>
+
+
+
 
 
     </dependencies>

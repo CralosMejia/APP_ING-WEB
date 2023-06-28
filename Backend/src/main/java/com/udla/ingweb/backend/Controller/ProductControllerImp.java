@@ -7,12 +7,11 @@ import com.udla.ingweb.backend.Entity.SearchHistory;
 import com.udla.ingweb.backend.Entity.Store;
 import com.udla.ingweb.backend.Model.ProductRepository;
 import com.udla.ingweb.backend.Model.StoreReposiroty;
-import com.udla.ingweb.backend.Util.ClaveUtils;
-import com.udla.ingweb.backend.Util.IVGenerator;
-import com.udla.ingweb.backend.Util.OpenSSLUtil;
-import com.udla.ingweb.backend.Util.SerializacionUtil;
+import com.udla.ingweb.backend.Util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import software.amazon.awssdk.services.kms.KmsClient;
+
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -25,7 +24,8 @@ import java.util.*;
 @Controller
 public class ProductControllerImp implements ProductController {
 
-
+    @Autowired
+    private  EncryptionService encryptionService;
     @Autowired
     private ProductRepository productRepo;
     @Autowired
@@ -89,38 +89,41 @@ public class ProductControllerImp implements ProductController {
         String clave = "UDLA2023";
         String iv="1234567890123456";
 
+
+
         List<Product> products= new ArrayList<Product>(productRepo.findAll());
 
         products.removeIf(product ->
                 (Objects.isNull(product.getCategoria()) || !product.getCategoria().equals("SALUD")));
         try{
         // Convertir la clave y el IV de cadenas de texto a bytes
-        byte[] claveBytes = ClaveUtils.generarClave(clave);
-        byte[] ivBytes = iv.getBytes(StandardCharsets.UTF_8);
+        //byte[] claveBytes = ClaveUtils.generarClave(clave);
+       // byte[] ivBytes = iv.getBytes(StandardCharsets.UTF_8);
 
         // Crear una instancia de la clase Cipher con el modo y el algoritmo adecuados
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        //Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
         // Crear una clave secreta a partir de los bytes de la clave
-        SecretKeySpec secretKeySpec = new SecretKeySpec(claveBytes, "AES");
+        //SecretKeySpec secretKeySpec = new SecretKeySpec(claveBytes, "AES");
 
         // Crear un objeto IvParameterSpec a partir de los bytes del IV
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
+        //IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
 
         // Configurar el cifrado en modo de encriptación y con la clave y el IV adecuados
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
+        //cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
 
         // Convertir la lista de objetos a una cadena JSON
         String datosJson = convertirListaObjetosAJson(products);
 
+        String response = encryptionService.encryptData(datosJson);
         // Encriptar los datos
-        byte[] datosEncriptados = cipher.doFinal(datosJson.getBytes(StandardCharsets.UTF_8));
+        //byte[] datosEncriptados = cipher.doFinal(datosJson.getBytes(StandardCharsets.UTF_8));
 
         // Codificar los datos encriptados en formato Base64
-        String datosEncriptadosBase64 = Base64.getEncoder().encodeToString(datosEncriptados);
+        //String datosEncriptadosBase64 = Base64.getEncoder().encodeToString(datosEncriptados);
 
-        System.out.println(verificarEncriptacion(clave,iv,datosEncriptadosBase64));
-        respJson.put("Products",datosEncriptadosBase64);
+        //System.out.println(verificarEncriptacion(clave,iv,datosEncriptadosBase64));
+        respJson.put("Products",response);
 
         return respJson;
     } catch (Exception e) {
@@ -142,6 +145,8 @@ public class ProductControllerImp implements ProductController {
 
     public static boolean verificarEncriptacion(String clave, String iv, String datosEncriptados) {
         try {
+
+
             // Convertir la clave y el IV de cadenas de texto a bytes
             byte[] claveBytes = ClaveUtils.generarClave(clave);
             byte[] ivBytes = iv.getBytes(StandardCharsets.UTF_8);
