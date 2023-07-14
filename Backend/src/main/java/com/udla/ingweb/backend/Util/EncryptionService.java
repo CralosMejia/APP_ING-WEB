@@ -17,9 +17,9 @@ public class EncryptionService {
     private final KmsClient kmsClient;
 
     public EncryptionService() {
-        String accessKeyId = "AKIATWFYCVWD65ITM4EH";
-        String secretAccessKey = "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";
-        Region region = Region.US_EAST_2; // Reemplaza por la región de AWS que estás utilizando
+        String accessKeyId = "AKIATWFYCVWD73BPM7VK";
+        String secretAccessKey = "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";
+        Region region = Region.US_EAST_1; // Reemplaza por la región de AWS que estás utilizando
 
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
         kmsClient = KmsClient.builder()
@@ -31,7 +31,7 @@ public class EncryptionService {
     public String encryptData(String data) throws UnsupportedEncodingException {
         byte[] dataBytes = data.getBytes("UTF-8");
         EncryptRequest request = EncryptRequest.builder()
-                .keyId("46dce938-d5d9-4dd0-a62e-52dafc549572") // Reemplaza con el ID de tu clave KMS
+                .keyId("021e84f8-83bb-4318-aec2-b2effa43691e") // Reemplaza con el ID de tu clave KMS
                 .plaintext(SdkBytes.fromByteArray(dataBytes))
                 .build();
         EncryptResponse response = kmsClient.encrypt(request);
